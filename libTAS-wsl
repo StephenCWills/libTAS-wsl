@@ -1,0 +1,29 @@
+#!/bin/sh
+if [ "$1" = "--help" ]
+then
+    echo "Generate custom WSL distributions with libTAS preinstalled"
+    echo
+    echo "Usage: ./libTAS-wsl [image] [version]"
+    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  version is a libTAS release version (default: 1.4.7)"
+    return
+fi
+
+platform=${1:-ubuntu:24.04}
+version=${2:-1.4.7}
+dockerName="libtas-wsl"
+
+docker build \
+    --build-arg baseImage="$platform" \
+    --build-arg releaseVersion="$version" \
+    -f "Dockerfile" \
+    -t "$dockerName" \
+    setup
+
+docker create --name "$dockerName" -it "$dockerName"
+
+docker export "$dockerName" | \
+    tar --delete etc/resolv.conf | \
+    gzip --best > "libTAS.wsl"
+
+docker container rm "$dockerName"
