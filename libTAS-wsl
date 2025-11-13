@@ -6,6 +6,11 @@ then
     echo "Usage: ./libTAS-wsl [image] [version]"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
     echo "  version is a libTAS release version (default: 1.4.7)"
+    echo
+    echo "Usage: ./libTAS-wsl pcem [lversion] [pversion]"
+    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo "  pversion is a PCem release version from"
+    echo "    https://github.com/TASEmulators/pcem/releases (default: 17+st-1)"
     return
 fi
 
@@ -13,12 +18,25 @@ platform=${1:-ubuntu:24.04}
 version=${2:-1.4.7}
 dockerName="libtas-wsl"
 
+[ "$1" = "pcem" ] && platform="ubuntu:22.04"
+
 docker build \
     --build-arg baseImage="$platform" \
     --build-arg releaseVersion="$version" \
     -f "Dockerfile" \
     -t "$dockerName" \
     setup
+
+if [ "$1" = "pcem" ]
+then
+    version=${3:-17+st-1}
+    dockerName="libtas-wsl-pcem"
+
+    docker build \
+        --build-arg releaseVersion="$version" \
+        -f "pcem.Dockerfile" \
+        -t "$dockerName"
+fi
 
 docker create --name "$dockerName" -it "$dockerName"
 
