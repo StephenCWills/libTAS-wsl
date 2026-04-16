@@ -56,5 +56,18 @@ jobs:
         with:
           name: ${{ env.ARTIFACT_NAME }}
 
-      - name: Install libTAS
-        run: wsl --install --from-file $env:ARTIFACT_NAME
+      - name: Install libTAS.wsl distribution
+        run: |
+          wsl --install --from-file $env:ARTIFACT_NAME --no-launch
+          $path = "\\wsl.localhost\libTAS\etc\oobe.sh"
+          $prompt = "read -p 'Enter new UNIX username: ' username"
+          $passwd = "/usr/bin/passwd `"\`$username`""
+          $chpasswd = "echo TAS:libtas | /usr/sbin/chpasswd"
+          $aptinstall = "apt-get -y install"
+          $nointinstall = "DEBIAN_FRONTEND=noninteractive $aptinstall"
+          $oobe = Get-Content -Raw $path
+          $oobe = $oobe -replace $prompt, "username=TAS"
+          $oobe = $oobe -replace $passwd, $chpasswd
+          $oobe = $oobe -replace $aptinstall, $nointinstall
+          $oobe | Set-Content -NoNewLine $path
+          wsl -d libTAS
