@@ -57,4 +57,4 @@ jobs:
           name: ${{ env.ARTIFACT_NAME }}
 
       - name: Install libTAS
-        run: wsl --install --from-file $ARTIFACT_NAME
+        run: wsl --install --from-file $env:ARTIFACT_NAME
