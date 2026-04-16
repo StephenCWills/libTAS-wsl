@@ -31,17 +31,20 @@ jobs:
 
       - name: Generate libTAS.wsl
         if: ${{ inputs.docker_image != '' }}
-        run: ./libTAS-wsl "$DOCKER_IMAGE" "$LIBTAS_VERSION"
+        run: |
+          ./libTAS-wsl "$DOCKER_IMAGE" "$LIBTAS_VERSION" &&
+          mv libTAS.wsl $ARTIFACT_NAME
 
       - name: Generate libTAS.wsl with PCem
         if: ${{ inputs.pcem_version != '' }}
-        run: ./libTAS-wsl pcem "$LIBTAS_VERSION" "$PCEM_VERSION"
+        run: |
+          ./libTAS-wsl pcem "$LIBTAS_VERSION" "$PCEM_VERSION" &&
+          mv libTAS.wsl $ARTIFACT_NAME
 
       - name: Upload libTAS.wsl
         uses: actions/upload-artifact@v7
         with:
-          name: ${{ env.ARTIFACT_NAME }}
-          path:  libTAS.wsl
+          path: ${{ env.ARTIFACT_NAME }}
           archive: false
 
   test:
