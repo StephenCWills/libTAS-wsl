@@ -1,0 +1,24 @@
+name: Build Matrix
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build_matrix:
+    strategy:
+      matrix:
+        libtas_version: [1.4.5, 1.4.6, 1.4.7]
+        pcem: [false, true]
+        include:
+          - pcem: false
+            docker_image: ubuntu:24.04
+          - pcem: true
+            pcem_version: 17+st-1
+        exclude:
+          - libtas_version: 1.4.7
+            pcem: true
+    uses: StephenCWills/libTAS-wsl/.github/workflows/build-and-test.yml@main
+    with:
+      libtas_version: ${{ matrix.libtas_version }}
+      docker_image: ${{ matrix.docker_image }}
+      pcem_version: ${{ matrix.pcem_version }}

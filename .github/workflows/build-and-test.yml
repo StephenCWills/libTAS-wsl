@@ -1,0 +1,57 @@
+name: Build and Test
+
+on:
+  workflow_call:
+    inputs:
+      libtas_version:
+        required: true
+        type: string
+      docker_image:
+        default: ''
+        required: false
+        type: string
+      pcem_version:
+        default: ''
+        required: false
+        type: string
+
+env:
+  ARTIFACT_NAME: ${{ inputs.pcem_version == '' && format('libTAS-{0}_amd64.wsl', inputs.libtas_version) || format('libTAS-{0}_PCem-{1}_amd64.wsl', inputs.libtas_version, inputs.pcem_version) }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_IMAGE: ${{ inputs.docker_image }}
+      LIBTAS_VERSION: ${{ inputs.libtas_version }}
+      PCEM_VERSION: ${{ inputs.pcem_version }}
+    steps:
+      - name: Check out libTAS-wsl
+        uses: actions/checkout@v6
+
+      - name: Generate libTAS.wsl
+        if: ${{ inputs.docker_image != '' }}
+        run: ./libTAS-wsl "$DOCKER_IMAGE" "$LIBTAS_VERSION"
+
+      - name: Generate libTAS.wsl with PCem
+        if: ${{ inputs.pcem_version != '' }}
+        run: ./libTAS-wsl pcem "$LIBTAS_VERSION" "$PCEM_VERSION"
+
+      - name: Upload libTAS.wsl
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path:  libTAS.wsl
+          archive: false
+
+  test:
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - name: Download libTAS.wsl
+        uses: actions/download-artifact@v8
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+
+      - name: Install libTAS
+        run: wsl --install --from-file $ARTIFACT_NAME
