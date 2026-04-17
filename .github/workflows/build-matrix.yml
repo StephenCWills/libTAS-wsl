@@ -5,6 +5,7 @@ on:
 
 jobs:
   build_matrix:
+    name: Build and Test
     strategy:
       matrix:
         libtas_version: [1.4.5, 1.4.6, 1.4.7]
