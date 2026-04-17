@@ -1,5 +1,5 @@
 # libTAS-wsl
-Generate custom WSL distributions with libTAS preinstalled.
+Generate custom WSL distributions with [libTAS](https://github.com/clementgallet/libTAS) preinstalled.
 After installing WSL, Windows users can simply download one of the files from
 [the latest release](https://github.com/StephenCWills/libTAS-wsl/releases/latest)
 and double-click the file to install libTAS.
