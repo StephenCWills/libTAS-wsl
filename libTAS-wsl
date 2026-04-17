@@ -32,15 +32,11 @@ then
     version=${3:-17+st-1}
     dockerName="libtas-wsl-pcem"
 
-    mkdir -p .empty
-
     docker build \
         --build-arg releaseVersion="$version" \
         -f "pcem.Dockerfile" \
         -t "$dockerName" \
-        .empty
-
-    rmdir .empty
+        - < pcem.Dockerfile
 fi
 
 docker create --name "$dockerName" -it "$dockerName"
