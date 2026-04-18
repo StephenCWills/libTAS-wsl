@@ -83,6 +83,6 @@ RUN echo dpkg --add-architecture i386 >> /etc/oobe.sh && \
     echo rm /tmp/pcem.deb >> /etc/oobe.sh && \
     echo rm /tmp/libtas32.deps >> /etc/oobe.sh && \
     echo rm /tmp/ruffle.deps >> /etc/oobe.sh && \
-    echo setcap cap_checkpoint_restore+eip /usr/local/bin/libTAS >> /etc/oobe.sh
+    echo setcap cap_checkpoint_restore+eip /usr/bin/libTAS >> /etc/oobe.sh
 
 CMD /bin/bash
