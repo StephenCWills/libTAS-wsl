@@ -11,19 +11,30 @@ then
     echo "  lversion is a libTAS release version (default: 1.4.7)"
     echo "  pversion is a PCem release version from"
     echo "    https://github.com/TASEmulators/pcem/releases (default: 17+st-1)"
+    echo
+    echo "Usage: ./libTAS-wsl interim [image]"
+    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
     return
 fi
 
 platform=${1:-ubuntu:24.04}
 version=${2:-1.4.7}
+dockerFile="Dockerfile"
 dockerName="libtas-wsl"
 
 [ "$1" = "pcem" ] && platform="ubuntu:22.04"
 
+if [ "$1" = "interim" ]
+then
+    platform=${2:-ubuntu:24.04}
+    dockerFile="interim.Dockerfile"
+    dockerName="libtas-wsl-interim"
+fi
+
 docker build \
     --build-arg baseImage="$platform" \
     --build-arg releaseVersion="$version" \
-    -f "Dockerfile" \
+    -f "$dockerFile" \
     -t "$dockerName" \
     setup
 
