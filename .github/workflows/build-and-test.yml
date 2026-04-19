@@ -51,6 +51,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           path: ${{ env.ARTIFACT_NAME }}
+          retention-days: 1
           archive: false
 
   test:

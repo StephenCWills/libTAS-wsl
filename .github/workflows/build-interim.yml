@@ -1,12 +1,128 @@
 name: Build Interim
 
 on:
+  schedule:
+    - cron: '0 1 * * *'
   workflow_dispatch:
 
 jobs:
+  check_for_updates:
+    name: Check for updates
+    strategy:
+      matrix:
+        project: [libtas, pcem, ruffle]
+        include:
+          - project: libtas
+            owner: clementgallet
+            repo: libTAS
+          - project: pcem
+            owner: TASEmulators
+            repo: pcem
+          - project: ruffle
+            owner: ruffle-rs
+            repo: ruffle
+    runs-on: ubuntu-latest
+    env:
+      COMMIT_URL: https://api.github.com/repos/{0}/{1}/commits/HEAD
+    outputs:
+      libtas_sha: ${{ steps.sha.outputs.libtas }}
+      pcem_sha: ${{ steps.sha.outputs.pcem }}
+      ruffle_sha: ${{ steps.sha.outputs.ruffle }}
+    steps:
+      - name: Fetch commit hash
+        id: fetch
+        env:
+          URL: ${{ format(env.COMMIT_URL, matrix.owner, matrix.repo) }}
+        run: |
+          sha=$(curl -L "$URL" | jq -r '.sha')
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: Check commit hash
+        if: ${{ steps.fetch.outputs.sha == 'null' }}
+        uses: actions/github-script@v9
+        with:
+          script: core.setFailed('Fetch failed for commit hash')
+
+      - name: Look up cache entry
+        id: lookup
+        uses: actions/cache/restore@v5
+        with:
+          path: ${{ matrix.project }}
+          key: ${{ matrix.project }}-${{ steps.fetch.outputs.sha }}
+          lookup-only: true
+
+      - name: Output commit hash
+        id: sha
+        if: ${{ steps.lookup.outputs.cache-hit != 'true' }}
+        env:
+          PROJECT: ${{ matrix.project }}
+          SHA: ${{ steps.fetch.outputs.sha }}
+        run: echo "$PROJECT=$SHA" >> "$GITHUB_OUTPUT"
+
   build_interim:
     name: Build and Test
+    needs: check_for_updates
+    if: ${{ needs.check_for_updates.outputs.libtas_sha || needs.check_for_updates.outputs.pcem_sha || needs.check_for_updates.outputs.ruffle_sha }}
     uses: StephenCWills/libTAS-wsl/.github/workflows/build-and-test.yml@main
     with:
       libtas_version: interim
       docker_image: ubuntu:24.04
+
+  release_interim:
+    name: Prerelease
+    needs: build_interim
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+
+      - name: Post release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: interim
+          name: nightly-${{ steps.date.outputs.date }}
+          body: Nightly update using latest versions of libTAS, PCem, and Ruffle
+          files: '*.wsl'
+          prerelease: true
+
+  cache_version_info:
+    name: Cache version info
+    needs: [check_for_updates, release_interim]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prep cache files
+        env:
+          LIBTAS_SHA: ${{ needs.check_for_updates.outputs.libtas_sha }}
+          PCEM_SHA: ${{ needs.check_for_updates.outputs.pcem_sha }}
+          RUFFLE_SHA: ${{ needs.check_for_updates.outputs.ruffle_sha }}
+        run: |
+          echo "$LIBTAS_SHA" > libtas
+          echo "$PCEM_SHA" > pcem
+          echo "$RUFFLE_SHA" > ruffle
+
+      - name: Cache libTAS version
+        if: ${{ needs.check_for_updates.outputs.libtas_sha }}
+        uses: actions/cache/save@v5
+        with:
+          path: libtas
+          key: libtas-${{ needs.check_for_updates.outputs.libtas_sha }}
+
+      - name: Cache PCem version
+        if: ${{ needs.check_for_updates.outputs.pcem_sha }}
+        uses: actions/cache/save@v5
+        with:
+          path: pcem
+          key: pcem-${{ needs.check_for_updates.outputs.pcem_sha }}
+
+      - name: Cache Ruffle version
+        if: ${{ needs.check_for_updates.outputs.ruffle_sha }}
+        uses: actions/cache/save@v5
+        with:
+          path: ruffle
+          key: ruffle-${{ needs.check_for_updates.outputs.ruffle_sha }}
