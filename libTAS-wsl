@@ -45,7 +45,6 @@ then
 
     docker build \
         --build-arg releaseVersion="$version" \
-        -f "pcem.Dockerfile" \
         -t "$dockerName" \
         - < pcem.Dockerfile
 fi
