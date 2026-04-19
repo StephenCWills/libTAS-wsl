@@ -1,0 +1,48 @@
+name: Build Release
+
+on:
+  schedule:
+    - cron: '0 1 1 * *'
+  workflow_dispatch:
+
+jobs:
+  build_release_matrix:
+    name: Build and Test
+    strategy:
+      matrix:
+        libtas_version: [1.4.5, 1.4.6, 1.4.7]
+        pcem: [false, true]
+        include:
+          - pcem: false
+            docker_image: ubuntu:24.04
+          - pcem: true
+            pcem_version: 17+st-1
+        exclude:
+          - libtas_version: 1.4.7
+            pcem: true
+    uses: StephenCWills/libTAS-wsl/.github/workflows/build-and-test.yml@main
+    with:
+      libtas_version: ${{ matrix.libtas_version }}
+      docker_image: ${{ matrix.docker_image }}
+      pcem_version: ${{ matrix.pcem_version }}
+
+  release:
+    needs: build_release_matrix
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "date=$(date +'%Y-%m-%d')" >> "$GITHUB_OUTPUT"
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v8
+
+      - name: Post release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: monthly-${{ steps.date.outputs.date }}
+          body: Monthly updates using the latest Docker images
+          make_latest: true
+          files: '*/*.wsl'
