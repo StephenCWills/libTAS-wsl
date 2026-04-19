@@ -30,7 +30,7 @@ jobs:
     needs: build_release_matrix
     runs-on: ubuntu-latest
     permissions:
-        contents: write
+      contents: write
     steps:
       - name: Get current date
         id: date

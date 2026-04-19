@@ -33,19 +33,19 @@ jobs:
         if: ${{ inputs.libtas_version != 'interim' && inputs.pcem_version == '' }}
         run: |
           ./libTAS-wsl "$DOCKER_IMAGE" "$LIBTAS_VERSION" &&
-          mv libTAS.wsl $ARTIFACT_NAME
+          mv libTAS.wsl "$ARTIFACT_NAME"
 
       - name: Generate libTAS.wsl with PCem
         if: ${{ inputs.pcem_version != '' }}
         run: |
           ./libTAS-wsl pcem "$LIBTAS_VERSION" "$PCEM_VERSION" &&
-          mv libTAS.wsl $ARTIFACT_NAME
+          mv libTAS.wsl "$ARTIFACT_NAME"
 
       - name: Generate libTAS.wsl with interim version
         if: ${{ inputs.libtas_version == 'interim' }}
         run: |
           ./libTAS-wsl interim "$DOCKER_IMAGE" &&
-          mv libTAS.wsl $ARTIFACT_NAME
+          mv libTAS.wsl "$ARTIFACT_NAME"
 
       - name: Upload libTAS.wsl
         uses: actions/upload-artifact@v7
