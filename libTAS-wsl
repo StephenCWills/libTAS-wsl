@@ -12,8 +12,23 @@ then
     echo "  pversion is a PCem release version from"
     echo "    https://github.com/TASEmulators/pcem/releases (default: 17+st-1)"
     echo
+    echo "Usage: ./libTAS-wsl ruffle [rversion] [image] [lversion]"
+    echo "  rversion is a Ruffle nightly build version from"
+    echo "    https://github.com/ruffle-rs/ruffle/releases (required)"
+    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo
     echo "Usage: ./libTAS-wsl interim [image]"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    return
+
+elif [ "$1" = "ruffle" ] && [ "$2" = "" ]
+then
+    echo "Usage: ./libTAS-wsl ruffle [rversion] [image] [lversion]"
+    echo "  rversion is a Ruffle nightly build version from"
+    echo "    https://github.com/ruffle-rs/ruffle/releases (required)"
+    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  lversion is a libTAS release version (default: 1.4.7)"
     return
 fi
 
@@ -22,9 +37,16 @@ version=${2:-1.4.7}
 dockerFile="Dockerfile"
 dockerName="libtas-wsl"
 
-[ "$1" = "pcem" ] && platform="ubuntu:22.04"
+if [ "$1" = "pcem" ]
+then
+    platform="ubuntu:22.04"
 
-if [ "$1" = "interim" ]
+elif [ "$1" = "ruffle" ]
+then
+    platform=${3:-ubuntu:24.04}
+    version=${4:-1.4.7}
+
+elif [ "$1" = "interim" ]
 then
     platform=${2:-ubuntu:24.04}
     dockerFile="interim.Dockerfile"
@@ -47,6 +69,26 @@ then
         --build-arg releaseVersion="$version" \
         -t "$dockerName" \
         - < pcem.Dockerfile
+
+elif [ "$1" = "ruffle" ]
+then
+    version=$2
+    dockerName="libtas-wsl-ruffle"
+
+    day=$version
+    month=${day%-*}
+    year=${month%-*}
+    day=${day##*-}
+    month=${month##*-}
+    year=${year##*-}
+    assetFilename="ruffle-nightly-${year}_${month}_$day-linux-x86_64.tar.gz"
+
+    docker build \
+        --build-arg releaseTag="$version" \
+        --build-arg assetFilename="$assetFilename" \
+        -f ruffle.Dockerfile \
+        -t "$dockerName" \
+        setup
 fi
 
 docker create --name "$dockerName" -it "$dockerName"
