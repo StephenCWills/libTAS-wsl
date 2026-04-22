@@ -14,9 +14,21 @@ on:
         default: ''
         required: false
         type: string
+      ruffle_version:
+        default: ''
+        required: false
+        type: string
 
 env:
-  ARTIFACT_NAME: ${{ inputs.pcem_version == '' && format('libTAS-{0}_amd64.wsl', inputs.libtas_version) || format('libTAS-{0}_PCem-{1}_amd64.wsl', inputs.libtas_version, inputs.pcem_version) }}
+  ARTIFACT_NAME: >-
+    ${{
+      format(
+        (inputs.pcem_version && 'libtas-{0}_PCem-{1}_amd64.wsl') ||
+          (inputs.ruffle_version && 'libtas-{0}_Ruffle-{1}_amd64.wsl') ||
+          'libTAS-{0}_amd64.wsl',
+        inputs.libtas_version,
+        inputs.pcem_version || inputs.ruffle_version)
+    }}
 
 jobs:
   build:
@@ -25,6 +37,7 @@ jobs:
       DOCKER_IMAGE: ${{ inputs.docker_image }}
       LIBTAS_VERSION: ${{ inputs.libtas_version }}
       PCEM_VERSION: ${{ inputs.pcem_version }}
+      RUFFLE_VERSION: ${{ inputs.ruffle_version }}
     steps:
       - name: Check out libTAS-wsl
         uses: actions/checkout@v6
@@ -39,6 +52,15 @@ jobs:
         if: ${{ inputs.pcem_version != '' }}
         run: |
           ./libTAS-wsl pcem "$LIBTAS_VERSION" "$PCEM_VERSION" &&
+          mv libTAS.wsl "$ARTIFACT_NAME"
+
+      - name: Generate libTAS.wsl with Ruffle
+        if: ${{ inputs.ruffle_version != '' }}
+        run: |
+          ./libTAS-wsl ruffle \
+            "$RUFFLE_VERSION" \
+            "$DOCKER_IMAGE" \
+            "$LIBTAS_VERSION" &&
           mv libTAS.wsl "$ARTIFACT_NAME"
 
       - name: Generate libTAS.wsl with interim version
