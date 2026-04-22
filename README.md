@@ -30,6 +30,14 @@ simply entering `libTAS` into the prompt.
 The installation creates a WSL distribution called `libTAS`. If you close the terminal,
 you should be able to open it back up again by searching for `libTAS` in your Start menu.
 
+## Interim
+In addition to the releases, this project also offers a distribution containing [the
+latest interim version](https://github.com/StephenCWills/libTAS-wsl/releases/interim)
+of libTAS alongside both PCem and Ruffle. This distribution is refreshed nightly by
+compiling the applications from source. It can be installed the same way as any of the
+release versions by downloading the `libTAS-interim_amd64.wsl` file and double-clicking
+it to begin the installation process.
+
 ## Advanced
 By default, the libTAS-wsl distributions will create a WSL distribution called `libTAS`.
 This means multiple versions cannot be installed side-by-side. However, the file can also
