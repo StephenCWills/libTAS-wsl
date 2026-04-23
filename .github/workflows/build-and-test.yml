@@ -18,13 +18,18 @@ on:
         default: ''
         required: false
         type: string
+      steam:
+        default: false
+        required: false
+        type: boolean
 
 env:
   ARTIFACT_NAME: >-
     ${{
       format(
-        (inputs.pcem_version && 'libtas-{0}_PCem-{1}_amd64.wsl') ||
-          (inputs.ruffle_version && 'libtas-{0}_Ruffle-{1}_amd64.wsl') ||
+        (inputs.pcem_version && 'libTAS-{0}_PCem-{1}_amd64.wsl') ||
+          (inputs.ruffle_version && 'libTAS-{0}_Ruffle-{1}_amd64.wsl') ||
+          (inputs.steam && 'libTAS-{0}_Steam_amd64.wsl') ||
           'libTAS-{0}_amd64.wsl',
         inputs.libtas_version,
         inputs.pcem_version || inputs.ruffle_version)
@@ -43,7 +48,13 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Generate libTAS.wsl
-        if: ${{ inputs.libtas_version != 'interim' && inputs.pcem_version == '' }}
+        if: >-
+          ${{
+            inputs.libtas_version != 'interim' &&
+            inputs.pcem_version == '' &&
+            inputs.ruffle_version == '' &&
+            !inputs.steam
+          }}
         run: |
           ./libTAS-wsl "$DOCKER_IMAGE" "$LIBTAS_VERSION" &&
           mv libTAS.wsl "$ARTIFACT_NAME"
@@ -61,6 +72,12 @@ jobs:
             "$RUFFLE_VERSION" \
             "$DOCKER_IMAGE" \
             "$LIBTAS_VERSION" &&
+          mv libTAS.wsl "$ARTIFACT_NAME"
+
+      - name: Generate libTAS.wsl with Steam
+        if: ${{ inputs.steam }}
+        run: |
+          ./libTAS-wsl steam "$LIBTAS_VERSION" &&
           mv libTAS.wsl "$ARTIFACT_NAME"
 
       - name: Generate libTAS.wsl with interim version
