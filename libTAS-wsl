@@ -18,6 +18,9 @@ then
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
     echo "  lversion is a libTAS release version (default: 1.4.7)"
     echo
+    echo "Usage: ./libTAS-wsl steam [lversion]"
+    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo
     echo "Usage: ./libTAS-wsl interim [image]"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
     return
@@ -45,6 +48,11 @@ elif [ "$1" = "ruffle" ]
 then
     platform=${3:-ubuntu:24.04}
     version=${4:-1.4.7}
+
+elif [ "$1" = "steam" ]
+then
+    platform="ubuntu:24.04"
+    version=${1:-1.4.7}
 
 elif [ "$1" = "interim" ]
 then
@@ -89,6 +97,14 @@ then
         -f ruffle.Dockerfile \
         -t "$dockerName" \
         setup
+
+elif [ "$1" = "steam" ]
+then
+    dockerName="libtas-wsl-steam"
+
+    docker build \
+        -t "$dockerName" \
+        - < steam.Dockerfile
 fi
 
 docker create --name "$dockerName" -it "$dockerName"
