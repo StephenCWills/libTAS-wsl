@@ -30,6 +30,14 @@ simply entering `libTAS` into the prompt.
 The installation creates a WSL distribution called `libTAS`. If you close the terminal,
 you should be able to open it back up again by searching for `libTAS` in your Start menu.
 
+_**Note**: The installation process may ask you about your geographic region and time zone.
+           This occurs as part of the setup for the `tzdata` package, which is a dependency
+           of several other packages on Linux systems. This setup is similar to changing your
+           time zone settings on Windows OS to make your clock display the correct time of
+           day. This information is not critical, and it does not need to be accurate in
+           order for libTAS to function. If you are uncomfortable sharing your personal
+           information, feel free to enter any value you like._
+
 ## Interim
 In addition to the releases, this project also offers a distribution containing [the
 latest interim version](https://github.com/StephenCWills/libTAS-wsl/releases/interim)
@@ -38,11 +46,19 @@ compiling the applications from source. It can be installed the same way as any 
 release versions by downloading the `libTAS-interim_amd64.wsl` file and double-clicking
 it to begin the installation process.
 
+## Uninstall
+Should you need to uninstall your libTAS distribution, you must do so by issuing the
+unregister command to WSL. Open a command prompt and enter the following command.
+
+```
+wsl --unregister libTAS
+```
+
 ## Advanced
 By default, the libTAS-wsl distributions will create a WSL distribution called `libTAS`.
-This means multiple versions cannot be installed side-by-side. However, the file can also
-be installed using the `wsl` command in the command prompt. You can assign a different
-name using the `--name` parameter.
+Normally this means multiple versions cannot be installed side-by-side. However, instead
+of double-clicking, the `*.wsl` file can also be installed using the `wsl` command in the
+command prompt. You can assign a different name using the `--name` parameter.
 
 ```
 wsl --install --name libTAS-1.4.7 --from-file libTAS-1.4.7_amd64.wsl
