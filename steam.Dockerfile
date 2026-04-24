@@ -7,8 +7,7 @@ ADD https://github.com/SteamRE/DepotDownloader/releases/latest/download/DepotDow
 RUN echo apt-get -y install software-properties-common >> /etc/oobe.sh && \
     echo add-apt-repository -y multiverse >> /etc/oobe.sh && \
     echo apt-get update >> /etc/oobe.sh && \
-    echo apt-get -y install steam >> /etc/oobe.sh && \
-    echo apt-get -y install unzip >> /etc/oobe.sh && \
+    echo apt-get -y install steam unzip >> /etc/oobe.sh && \
     echo unzip /tmp/DepotDownloader-linux-x64.zip DepotDownloader \
              -d /usr/local/bin/ >> /etc/oobe.sh && \
     echo rm /tmp/DepotDownloader-linux-x64.zip >> /etc/oobe.sh

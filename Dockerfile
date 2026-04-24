@@ -21,7 +21,9 @@ RUN chmod 666 /tmp/$package
 # Apply libTAS installation steps to WSL's oobe.sh script
 RUN echo dpkg --add-architecture i386 >> /etc/oobe.sh && \
     echo apt-get update >> /etc/oobe.sh && \
-    echo apt-get -y install sudo libcap2-bin /tmp/$package >> /etc/oobe.sh && \
+    echo apt-get -y install \
+             sudo file wget binutils gdb libcap2-bin \
+             /tmp/$package >> /etc/oobe.sh && \
     echo rm /tmp/$package >> /etc/oobe.sh && \
     echo setcap cap_checkpoint_restore+eip /usr/bin/libTAS >> /etc/oobe.sh
 
