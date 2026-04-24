@@ -41,8 +41,6 @@ jobs:
             docker_image: ubuntu:24.04
             ruffle_version: >-
               ${{ needs.fetch_ruffle_version.outputs.ruffle_version }}
-          - companion: steam
-            steam: true
         exclude:
           - libtas_version: 1.4.7
             companion: pcem
@@ -52,7 +50,7 @@ jobs:
       docker_image: ${{ matrix.docker_image }}
       pcem_version: ${{ matrix.pcem_version }}
       ruffle_version: ${{ matrix.ruffle_version }}
-      steam: ${{ matrix.steam }}
+      steam: ${{ matrix.companion == 'steam' }}
 
   release:
     needs: build_release_matrix

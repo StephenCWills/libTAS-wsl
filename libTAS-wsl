@@ -52,7 +52,6 @@ then
 elif [ "$1" = "steam" ]
 then
     platform="ubuntu:24.04"
-    version=${1:-1.4.7}
 
 elif [ "$1" = "interim" ]
 then
