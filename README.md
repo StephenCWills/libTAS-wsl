@@ -54,6 +54,14 @@ unregister command to WSL. Open a command prompt and enter the following command
 wsl --unregister libTAS
 ```
 
+Keep in mind that each installed instance of a WSL distribution is effectively an
+installation of a Linux-based operating system with its own directory structure and
+files. If you have installed any games on your WSL distribution in order to TAS them,
+unregistering the distribution will delete the game along with it. Furthermore, any
+TAS movies you have created will be lost if they are not copied to your Windows drive
+first. You can use Windows Explorer to navigate the Linux filesystem and copy any
+files you need before uninstalling.
+
 ## Advanced
 By default, the libTAS-wsl distributions will create a WSL distribution called `libTAS`.
 Normally this means multiple versions cannot be installed side-by-side. However, instead
