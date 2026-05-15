@@ -5,10 +5,10 @@ then
     echo
     echo "Usage: ./libTAS-wsl [image] [version]"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
-    echo "  version is a libTAS release version (default: 1.4.7)"
+    echo "  version is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl pcem [lversion] [pversion]"
-    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo "  pversion is a PCem release version from"
     echo "    https://github.com/TASEmulators/pcem/releases (default: 17+st-1)"
     echo
@@ -16,10 +16,10 @@ then
     echo "  rversion is a Ruffle nightly build version from"
     echo "    https://github.com/ruffle-rs/ruffle/releases (required)"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
-    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl steam [lversion]"
-    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl interim [image]"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
@@ -31,12 +31,12 @@ then
     echo "  rversion is a Ruffle nightly build version from"
     echo "    https://github.com/ruffle-rs/ruffle/releases (required)"
     echo "  image is the name of a Docker image (default: ubuntu:24.04)"
-    echo "  lversion is a libTAS release version (default: 1.4.7)"
+    echo "  lversion is a libTAS release version (default: 1.4.8)"
     return
 fi
 
 platform=${1:-ubuntu:24.04}
-version=${2:-1.4.7}
+version=${2:-1.4.8}
 dockerFile="Dockerfile"
 dockerName="libtas-wsl"
 
@@ -47,7 +47,7 @@ then
 elif [ "$1" = "ruffle" ]
 then
     platform=${3:-ubuntu:24.04}
-    version=${4:-1.4.7}
+    version=${4:-1.4.8}
 
 elif [ "$1" = "steam" ]
 then

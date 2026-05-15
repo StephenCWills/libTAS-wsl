@@ -69,5 +69,5 @@ of double-clicking, the `*.wsl` file can also be installed using the `wsl` comma
 command prompt. You can assign a different name using the `--name` parameter.
 
 ```
-wsl --install --name libTAS-1.4.7 --from-file libTAS-1.4.7_amd64.wsl
+wsl --install --name libTAS-1.4.8 --from-file libTAS-1.4.8_amd64.wsl
 ```

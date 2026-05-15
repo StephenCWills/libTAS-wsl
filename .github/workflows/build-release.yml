@@ -30,7 +30,7 @@ jobs:
     needs: fetch_ruffle_version
     strategy:
       matrix:
-        libtas_version: [1.4.5, 1.4.6, 1.4.7]
+        libtas_version: [1.4.5, 1.4.6, 1.4.7, 1.4.8]
         companion: [none, pcem, ruffle, steam]
         include:
           - companion: none

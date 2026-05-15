@@ -13,7 +13,7 @@ RUN chown root:root /etc/wsl*.conf && \
     (getent passwd 1000 > /dev/null && userdel -r $(id -un 1000) || true)
 
 # Download libTAS release package
-ARG releaseVersion=1.4.7
+ARG releaseVersion=1.4.8
 ARG package=libtas_${releaseVersion}_amd64.deb
 ADD https://github.com/clementgallet/libTAS/releases/download/v${releaseVersion}/$package /tmp/
 RUN chmod 666 /tmp/$package
