@@ -28,7 +28,7 @@ RUN git clone https://github.com/clementgallet/libTAS.git && \
     curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 WORKDIR /root/libTAS
-RUN ./build.sh --with-i386 && \
+RUN ./build.sh --skip-appimage --with-i386 && \
     DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
     mv ../libtas*.deb ../libtas.deb
 
