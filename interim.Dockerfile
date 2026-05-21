@@ -28,15 +28,11 @@ RUN git clone https://github.com/clementgallet/libTAS.git && \
     curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 WORKDIR /root/libTAS
-RUN ./build.sh --skip-appimage --with-i386 && \
-    DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
+RUN DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
     mv ../libtas*.deb ../libtas.deb
 
 WORKDIR /root/pcem
-RUN autoreconf -i && \
-    ./configure --enable-release-build && \
-    make && \
-    sed -i 's/libwxbase3.0-dev/& | libwxbase3.2-1t64/' debian/control && \
+RUN sed -i 's/libwxbase3.0-dev/& | libwxbase3.2-1t64/' debian/control && \
     DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
     mv ../pcem*.deb ../pcem.deb
 
