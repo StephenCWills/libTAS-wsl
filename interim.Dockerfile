@@ -18,8 +18,8 @@ RUN dpkg --add-architecture i386 && \
         build-essential automake pkg-config libwxbase3.2-1t64 libwxgtk3.2-dev \
         wx-common libsdl2-dev libopenal-dev && \
     apt-get -y install \
-        pkg-config libasound2-dev libudev-dev default-jre-headless g++ curl \
-        fonts-noto
+        pkg-config libasound2-dev libudev-dev libfontconfig-dev libssl-dev\
+        default-jre-headless g++ curl fonts-noto
 
 WORKDIR /root
 RUN git clone https://github.com/clementgallet/libTAS.git && \
