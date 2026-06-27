@@ -4,7 +4,7 @@ then
     echo "Generate custom WSL distributions with libTAS preinstalled"
     echo
     echo "Usage: ./libTAS-wsl [image] [version]"
-    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  image is the name of a Docker image (default: ubuntu:26.04)"
     echo "  version is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl pcem [lversion] [pversion]"
@@ -15,7 +15,7 @@ then
     echo "Usage: ./libTAS-wsl ruffle [rversion] [image] [lversion]"
     echo "  rversion is a Ruffle nightly build version from"
     echo "    https://github.com/ruffle-rs/ruffle/releases (required)"
-    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  image is the name of a Docker image (default: ubuntu:26.04)"
     echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl steam [lversion]"
@@ -30,12 +30,12 @@ then
     echo "Usage: ./libTAS-wsl ruffle [rversion] [image] [lversion]"
     echo "  rversion is a Ruffle nightly build version from"
     echo "    https://github.com/ruffle-rs/ruffle/releases (required)"
-    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  image is the name of a Docker image (default: ubuntu:26.04)"
     echo "  lversion is a libTAS release version (default: 1.4.8)"
     return
 fi
 
-platform=${1:-ubuntu:24.04}
+platform=${1:-ubuntu:26.04}
 version=${2:-1.4.8}
 dockerFile="Dockerfile"
 dockerName="libtas-wsl"
@@ -46,12 +46,12 @@ then
 
 elif [ "$1" = "ruffle" ]
 then
-    platform=${3:-ubuntu:24.04}
+    platform=${3:-ubuntu:26.04}
     version=${4:-1.4.8}
 
 elif [ "$1" = "steam" ]
 then
-    platform="ubuntu:24.04"
+    platform="ubuntu:26.04"
 
 elif [ "$1" = "interim" ]
 then

@@ -1,4 +1,4 @@
-ARG baseImage=ubuntu:24.04
+ARG baseImage=ubuntu:26.04
 FROM $baseImage
 
 # Deploy WSL setup files
