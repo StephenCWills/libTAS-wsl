@@ -1,4 +1,4 @@
-ARG baseImage=ubuntu:24.04
+ARG baseImage=ubuntu:26.04
 FROM $baseImage AS libtas-wsl-builder
 
 RUN dpkg --add-architecture i386 && \
@@ -11,8 +11,8 @@ RUN dpkg --add-architecture i386 && \
         libavutil-dev libswresample-dev ffmpeg liblua5.4-dev libcap-dev \
         libxcb-xinput-dev libfreetype6-dev libfontconfig1-dev g++-multilib \
         libx11-6:i386 libx11-dev:i386 libx11-xcb1:i386 libx11-xcb-dev:i386 \
-        libasound2:i386 libasound2-dev:i386 libavutil58:i386 \
-        libswresample4:i386 libfreetype6:i386 libfreetype6-dev:i386 \
+        libasound2:i386 libasound2-dev:i386 libavutil60:i386 \
+        libswresample6:i386 libfreetype6:i386 libfreetype6-dev:i386 \
         libfontconfig1:i386 libfontconfig1-dev:i386 && \
     apt-get -y install \
         build-essential automake pkg-config libwxbase3.2-1t64 libwxgtk3.2-dev \
@@ -28,7 +28,8 @@ RUN git clone https://github.com/clementgallet/libTAS.git && \
     curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 WORKDIR /root/libTAS
-RUN DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
+RUN sed -i 's/libswresample5/& | libswresample6/' debian/control && \
+    DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
     mv ../libtas*.deb ../libtas.deb
 
 WORKDIR /root/pcem

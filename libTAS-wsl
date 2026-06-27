@@ -22,7 +22,7 @@ then
     echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl interim [image]"
-    echo "  image is the name of a Docker image (default: ubuntu:24.04)"
+    echo "  image is the name of a Docker image (default: ubuntu:26.04)"
     return
 
 elif [ "$1" = "ruffle" ] && [ "$2" = "" ]
@@ -55,7 +55,7 @@ then
 
 elif [ "$1" = "interim" ]
 then
-    platform=${2:-ubuntu:24.04}
+    platform=${2:-ubuntu:26.04}
     dockerFile="interim.Dockerfile"
     dockerName="libtas-wsl-interim"
 fi
