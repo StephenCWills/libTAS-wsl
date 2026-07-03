@@ -33,12 +33,13 @@ jobs:
         libtas_version: [1.4.5, 1.4.6, 1.4.7, 1.4.8]
         companion: [none, pcem, ruffle, steam]
         include:
-          - companion: none
+          - docker_image: ubuntu:24.04
+          - libtas_version: 1.4.8
             docker_image: ubuntu:26.04
           - companion: pcem
             pcem_version: 17+st-1
+            docker_image:
           - companion: ruffle
-            docker_image: ubuntu:26.04
             ruffle_version: >-
               ${{ needs.fetch_ruffle_version.outputs.ruffle_version }}
         exclude:

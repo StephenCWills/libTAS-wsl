@@ -18,7 +18,8 @@ then
     echo "  image is the name of a Docker image (default: ubuntu:26.04)"
     echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo
-    echo "Usage: ./libTAS-wsl steam [lversion]"
+    echo "Usage: ./libTAS-wsl steam [image] [lversion]"
+    echo "  image is the name of a Docker image (default: ubuntu:26.04)"
     echo "  lversion is a libTAS release version (default: 1.4.8)"
     echo
     echo "Usage: ./libTAS-wsl interim [image]"
@@ -51,7 +52,8 @@ then
 
 elif [ "$1" = "steam" ]
 then
-    platform="ubuntu:26.04"
+    platform=${2:-ubuntu:26.04}
+    version=${3:-1.4.8}
 
 elif [ "$1" = "interim" ]
 then

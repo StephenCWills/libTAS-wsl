@@ -77,7 +77,7 @@ jobs:
       - name: Generate libTAS.wsl with Steam
         if: ${{ inputs.steam }}
         run: |
-          ./libTAS-wsl steam "$LIBTAS_VERSION" &&
+          ./libTAS-wsl steam "$DOCKER_IMAGE" "$LIBTAS_VERSION" &&
           mv libTAS.wsl "$ARTIFACT_NAME"
 
       - name: Generate libTAS.wsl with interim version
