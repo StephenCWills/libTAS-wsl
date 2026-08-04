@@ -8,12 +8,12 @@ RUN dpkg --add-architecture i386 && \
         build-essential automake pkg-config libx11-dev libx11-xcb-dev \
         qtbase5-dev libsdl2-dev libxcb1-dev libxcb-keysyms1-dev libxcb-xkb-dev \
         libxcb-cursor-dev libxcb-randr0-dev libudev-dev libasound2-dev \
-        libavutil-dev libswresample-dev ffmpeg liblua5.4-dev libcap-dev \
-        libxcb-xinput-dev libfreetype6-dev libfontconfig1-dev g++-multilib \
-        libx11-6:i386 libx11-dev:i386 libx11-xcb1:i386 libx11-xcb-dev:i386 \
-        libasound2:i386 libasound2-dev:i386 libavutil60:i386 \
-        libswresample6:i386 libfreetype6:i386 libfreetype6-dev:i386 \
-        libfontconfig1:i386 libfontconfig1-dev:i386 && \
+        libavutil-dev libswresample-dev libswscale-dev ffmpeg liblua5.4-dev \
+        libcap-dev libxcb-xinput-dev libfreetype6-dev libfontconfig1-dev \
+        g++-multilib libx11-6:i386 libx11-dev:i386 libx11-xcb1:i386 \
+        libx11-xcb-dev:i386 libasound2:i386 libasound2-dev:i386 \
+        libavutil60:i386 libswresample6:i386 libfreetype6:i386 \
+        libfreetype6-dev:i386 libfontconfig1:i386 libfontconfig1-dev:i386 && \
     apt-get -y install \
         build-essential automake pkg-config libwxbase3.2-1t64 libwxgtk3.2-dev \
         wx-common libsdl2-dev libopenal-dev && \
@@ -29,6 +29,10 @@ RUN git clone https://github.com/clementgallet/libTAS.git && \
 
 WORKDIR /root/libTAS
 RUN sed -i 's/libswresample5/& | libswresample6/' debian/control && \
+    sed -i 's/libswresample6/&, libswscale6/' debian/control && \
+    sed -i 's/libswscale6/& | libswscale7/' debian/control && \
+    sed -i 's/libswscale7/& | libswscale8/' debian/control && \
+    sed -i 's/libswscale8/& | libswscale9/' debian/control && \
     DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
     mv ../libtas*.deb ../libtas.deb
 
