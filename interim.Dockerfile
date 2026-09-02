@@ -28,12 +28,7 @@ RUN git clone https://github.com/clementgallet/libTAS.git && \
     curl https://sh.rustup.rs -sSf | sh -s -- -y
 
 WORKDIR /root/libTAS
-RUN sed -i 's/libswresample5/& | libswresample6/' debian/control && \
-    sed -i 's/libswresample6/&, libswscale6/' debian/control && \
-    sed -i 's/libswscale6/& | libswscale7/' debian/control && \
-    sed -i 's/libswscale7/& | libswscale8/' debian/control && \
-    sed -i 's/libswscale8/& | libswscale9/' debian/control && \
-    DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
+RUN DEB_BUILD_OPTIONS=nostrip dpkg-buildpackage --no-sign -b && \
     mv ../libtas*.deb ../libtas.deb
 
 WORKDIR /root/pcem
